@@ -1,0 +1,66 @@
+/*
+Theme Name:     Summerville Votes
+Theme URI: 		http://www.requitedesigns.com/seele
+Description:    Child Theme for Seele
+Author: 		Requite Designs
+Author URI: 	http://www.requitedesigns.com/seele
+Template:       seele
+Version:        1.0.0
+*/
+
+/* ------- Insert custom styles below this line ------- */
+.center {
+    text-align: center;
+}
+
+.svl-event {
+    padding-bottom:20px;
+}
+
+.svl-merchant {
+    width:100%;
+    margin-top:10px;
+    margin-bottom:10px;
+    border-radius: 0;
+    border-top-left-radius:3px;
+    border-top-right-radius:3px;
+}
+
+.svl-merchant-address{
+    background: white;
+    margin-top: -11px;
+    border: 1px solid #e4e4e4;
+    border-radius: 0;
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+    transition: all 0.4s ease;
+    -moz-transition: all 0.4s ease;
+    -webkit-transition: all 0.4s ease;
+}
+
+.vote-container {
+    padding-top:20px;
+}
+
+.vote-item{
+    /* visibility: hidden; */
+    display: contents;
+}
+
+.merchant {
+    display:inline-block;
+}
+
+thead td {
+    font-weight: 900;
+}
+
+thead tr {
+    background-color: #cccccc!important;
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    text-decoration: none;
+}
