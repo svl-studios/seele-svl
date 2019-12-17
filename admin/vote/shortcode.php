@@ -52,7 +52,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 				foreach ( $svl_options['svl_merchants'] as $idx => $val ) {
 					$pos = strpos( $val, '|' );
 
-					if ( ! false === $pos ) {
+					if ( false === $pos ) {
 						$name = $val;
 					} else {
 						$name    = substr( $val, 0, $pos );
@@ -63,7 +63,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 					echo '<div class="req-animated-button center">';
 					echo '<a class="svl-merchant main_button  coloured large_btn req-animated-button " href="javascript:;" style="">' . esc_html( $name ) . '</a>';
 
-					if ( '' !== $address ) {
+					if ( isset( $address) && '' !== $address ) {
 						echo '<div class="svl-merchant-address">' . esc_html( $address ) . '</div>';
 					}
 
