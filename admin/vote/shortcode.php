@@ -75,7 +75,12 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 				echo '</div>';
 				echo '</div>';
 			} elseif ( 'summerville_event' === $tag ) {
-				echo '<div class="center svl-event">' . esc_html( $svl_options['svl_event'] ) . '</div>';
+				if ( '' === $svl_options['svl_event_image'] ) {
+					echo '<div class="center svl-event">' . esc_html( $svl_options['svl_event'] ) . '</div>';
+				} else {
+					// var_dump($svl_options['svl_event_image']);
+					echo '<div class="center svl-event"><img src="' . esc_url( $svl_options['svl_event_image']['background-image'] ) . '"></div>';
+				}
 			} elseif ( 'summerville_event_date' === $tag ) {
 				echo '<div class="center svl-event-date">' . esc_html( $svl_options['svl_event_date'] ) . '</div>';
 			} elseif ( 'summerville_event_vote' === $tag ) {

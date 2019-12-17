@@ -72,6 +72,11 @@ Redux::setSection( $opt_name, array(
 			'subtitle' => esc_html__( 'Enter the name of the event.', 'seele' ),
 		),
 		array(
+			'id'     => 'svl_event_image',
+			'type'   => 'background',
+			'title'  => esc_html__( 'Event Image', 'seele' ),
+		),
+		array(
 			'id'             => 'svl_event_typo',
 			'type'           => 'typography',
 			'title'          => esc_html__( 'Font', 'seele' ),
