@@ -66,15 +66,27 @@ Redux::setSection( $opt_name, array(
 	'title'  => esc_html__( 'Event', 'seele' ),
 	'fields' => array(
 		array(
+			'id'      => 'svl_event_title_mode',
+			'type'    => 'button_set',
+			'title'   => esc_html__( 'Use text or an image as the title event.', 'seele' ),
+			'options' => array(
+				'text' => 'Text',
+				'image' => 'Image',
+			),
+			'default' => 'text',
+		),
+		array(
 			'id'       => 'svl_event',
 			'type'     => 'text',
 			'title'    => esc_html__( 'Event Name', 'seele' ),
 			'subtitle' => esc_html__( 'Enter the name of the event.', 'seele' ),
+			'required' => array('svl_event_title_mode', '=', 'text'),
 		),
 		array(
 			'id'     => 'svl_event_image',
 			'type'   => 'background',
 			'title'  => esc_html__( 'Event Image', 'seele' ),
+			'required' => array('svl_event_title_mode', '=', 'image'),
 		),
 		array(
 			'id'             => 'svl_event_typo',
@@ -92,11 +104,12 @@ Redux::setSection( $opt_name, array(
 				'text-transform' => 'none',
 				'color'          => '#666',
 			),
+			'required' => array('svl_event_title_mode', '=', 'text'),
 		),
 		array(
 			'id'     => 'svl_event_bg',
 			'type'   => 'background',
-			'title'  => esc_html__( 'Background', 'seele' ),
+			'title'  => esc_html__( 'Page Background', 'seele' ),
 			'output' => array( 'body' ),
 		),
 	),

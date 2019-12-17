@@ -75,7 +75,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 				echo '</div>';
 				echo '</div>';
 			} elseif ( 'summerville_event' === $tag ) {
-				if ( '' === $svl_options['svl_event_image'] ) {
+				if ( 'text' === $svl_options['svl_event_title_mode'] ) {
 					echo '<div class="center svl-event">' . esc_html( $svl_options['svl_event'] ) . '</div>';
 				} else {
 					// var_dump($svl_options['svl_event_image']);
