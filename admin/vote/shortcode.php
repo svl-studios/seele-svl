@@ -62,7 +62,11 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 					echo '<div class="vote-container col-sm-' . esc_attr( $svl_options['svl_merchants_per_row'] ) . '">';
 					echo '<div class="req-animated-button center">';
 					echo '<a class="svl-merchant main_button  coloured large_btn req-animated-button " href="javascript:;" style="">' . esc_html( $name ) . '</a>';
-					echo '<div class="svl-merchant-address">' . esc_html( $address ) . '</div>';
+
+					if ( '' !== $address ) {
+						echo '<div class="svl-merchant-address">' . esc_html( $address ) . '</div>';
+					}
+
 					echo '<input type="radio" name="svl-merchants" class="vote-item" value="' . esc_attr( $name ) . '">';
 					echo '</div>';
 					echo '</div>';
