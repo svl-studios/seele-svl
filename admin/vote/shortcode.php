@@ -43,7 +43,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 				echo '<div id="myNav" class="overlay" onclick="closeNav()">';
 				echo '<div class="overlay-content">';
 				echo '<div class="center svl-event"><img src="' . esc_url( $svl_options['svl_event_image']['background-image'] ) . '"></div>';
-				echo '<a href="#">Tap the screen to begin.</a>';
+				echo '<a href="#">Tap the screen to begin</a>';
 				echo '</div>';
 				echo '</div>';
 
