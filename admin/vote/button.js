@@ -1,5 +1,13 @@
 /* global console, svl_votes, confirm, alert, jQuery */
 
+function openNav() {
+	document.getElementById("myNav").style.width = "100%";
+}
+
+function closeNav() {
+	document.getElementById("myNav").style.width = "0%";
+}
+
 (function( $ ) {
 	'use strict';
 
@@ -33,6 +41,8 @@
 					$( this ).find( '.svl-merchant' ).matchHeight();
 				}
 			);
+
+			openNav();
 
 			clear.on (
 				'click',
@@ -141,6 +151,8 @@
 							);
 
 							$.unblockUI();
+
+							openNav();
 
 							button.removeClass( 'selected' );
 							address.removeClass( 'selected' );

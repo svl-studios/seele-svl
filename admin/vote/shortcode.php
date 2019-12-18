@@ -40,6 +40,12 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 			global $svl_options;
 
 			if ( 'summerville_votes' === $tag ) {
+				echo '<div id="myNav" class="overlay" onclick="closeNav()">';
+				echo '<div class="overlay-content">';
+				echo '<div class="center svl-event"><img src="' . esc_url( $svl_options['svl_event_image']['background-image'] ) . '"></div>';
+				echo '<a href="#">Tap the screen to begin.</a>';
+				echo '</div>';
+				echo '</div>';
 
 				// Waiting message.
 				echo '<div id="svl-voting-message" style="display:none;">';
@@ -79,7 +85,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 					echo '<div class="center svl-event">' . esc_html( $svl_options['svl_event'] ) . '</div>';
 				} else {
 					// var_dump($svl_options['svl_event_image']);
-					echo '<div class="center svl-event"><img src="' . esc_url( $svl_options['svl_event_image']['background-image'] ) . '"></div>';
+					echo '<div class="center svl-event"><img src="' . esc_url( $svl_options['svl_event_image']['background-image'] ) . '"><a href="javascript:void(0)" class="closebtn" onclick="openNav()">&times;</a></div>';
 				}
 			} elseif ( 'summerville_event_date' === $tag ) {
 				echo '<div class="center svl-event-date">' . esc_html( $svl_options['svl_event_date'] ) . '</div>';
