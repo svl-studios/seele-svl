@@ -220,7 +220,7 @@ Redux::setSection( $opt_name, array(
 		array(
 			'id'      => 'svl_merchants_per_row',
 			'type'    => 'button_set',
-			'title'   => esc_html__( 'Number of merchants to deplay per row.', 'seele' ),
+			'title'   => esc_html__( 'Number of merchants to display per row.', 'seele' ),
 			'options' => array(
 				'6' => 'Two',
 				'4' => 'Three',
