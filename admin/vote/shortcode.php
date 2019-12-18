@@ -49,7 +49,7 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 
 				// Waiting message.
 				echo '<div id="svl-voting-message" style="display:none;">';
-				echo '   <h3><img src="' . esc_url( get_stylesheet_directory_uri() ) . '/admin/vote/img/busy.gif" /> Submitting vote...<br><br>You voted for</h3>';
+				echo '<img src="' . esc_url( get_stylesheet_directory_uri() ) . '/admin/vote/img/busy.gif" /><strong> Submitting vote...</strong><br>';
 				echo '</div>';
 
 				echo '<div class="container-fluid">';

@@ -127,12 +127,12 @@ function closeNav() {
 					};
 
 					// Get default wait message.
-					waitMsg = $( '#svl-voting-message h3' ).html();
+					waitMsg = $( '#svl-voting-message' ).html();
 
 					// Load wait message.
 					$.blockUI(
 						{
-							message: '<h3>' + waitMsg + '</h3><br><h2 style="color:' + svl_votes.color + '">' + checked + '</font></h2><br>Thank you!<br>Enjoy the rest of the ' + svl_votes.event + '!',
+							message: '<h2>You voted for</h2><h3 style="color:' + svl_votes.color + ';font-weight:800;">' + checked + '</h3><br>' + waitMsg + 'Thank you!<br>Enjoy the rest of the ' + svl_votes.event + '!',
 							theme: false,
 							css: {
 								width: '500px',
