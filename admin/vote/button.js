@@ -1,4 +1,4 @@
-/* global console, svl_votes, confirm, alert, jQuery */
+/* global console, svl_votes, confirm, alert, jQuery, document */
 
 function openNav() {
 	document.getElementById("myNav").style.width = "100%";
@@ -136,7 +136,9 @@ function closeNav() {
 							theme: false,
 							css: {
 								width: '500px',
-								padding: '5px'
+								padding: '5px',
+								top:  ($(window).height() - 400) /2 + 'px',
+								left: ($(window).width() - 400) /2 + 'px'
 							}
 						}
 					);
