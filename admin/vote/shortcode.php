@@ -89,34 +89,39 @@ if ( ! class_exists( 'SummervilleVotes' ) ) {
 				echo '<div class="center svl-vote-tag">' . esc_html( $svl_options['svl_vote_tag'] ) . '</div>';
 			} elseif ( 'summerville_votes_results' === $tag ) {
 				$votes = get_option( 'svl_votes' );
-				arsort( $votes );
 
-				echo '<table>';
-				echo '<thead>';
-				echo '<tr>';
-				echo '<td>';
-				echo 'Merchant';
-				echo '</td>';
-				echo '<td>';
-				echo 'Total Votes';
-				echo '</td>';
-				echo '</tr>';
-				echo '</thead>';
-				echo '<tbody>';
+				if ( isset( $votes ) && is_array( $votes ) ) {
+					arsort( $votes );
 
-				foreach ( $votes as $merchant => $total ) {
+					echo '<table class="svl-results-table" data-nonce="' . wp_create_nonce( 'svl-clear-nonce' ) . '">';
+					echo '<thead>';
 					echo '<tr>';
 					echo '<td>';
-					echo esc_html( $merchant );
+					echo 'Merchant';
 					echo '</td>';
 					echo '<td>';
-					echo esc_html( $total );
+					echo 'Total Votes';
 					echo '</td>';
 					echo '</tr>';
-				}
+					echo '</thead>';
+					echo '<tbody>';
 
-				echo '</tbody>';
-				echo '</table>';
+					foreach ( $votes as $merchant => $total ) {
+						echo '<tr>';
+						echo '<td>';
+						echo esc_html( $merchant );
+						echo '</td>';
+						echo '<td>';
+						echo esc_html( $total );
+						echo '</td>';
+						echo '</tr>';
+					}
+
+					echo '</tbody>';
+					echo '</table>';
+				} else {
+					echo '<h3 class="center">No voting results to display.</h3>';
+				}
 			}
 		}
 	}

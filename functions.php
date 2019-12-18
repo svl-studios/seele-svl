@@ -96,3 +96,23 @@ function svl_ajax() {
 }
 
 add_action( 'wp_ajax_svl_votes_ajax', 'svl_ajax' );
+
+function svl_clear_ajax(){
+	if ( isset( $_POST['nonce'] ) ) {
+		if ( wp_verify_nonce( sanitize_key( $_POST['nonce'] ), 'svl-clear-nonce' ) ) {
+			if ( get_option( 'svl_votes' ) !== false ) {
+				if ( delete_option( 'svl_votes' ) ) {
+					echo 'deleted';
+				} else {
+					echo 'not deleted';
+				}
+			} else {
+				echo 'empty';
+			}
+		}
+	}
+
+	die();
+}
+
+add_action( 'wp_ajax_svl_clear_ajax', 'svl_clear_ajax' );
