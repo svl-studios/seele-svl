@@ -19,6 +19,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			}
 
 			echo esc_url( $url );
+			die();
 		}
 	}
 
