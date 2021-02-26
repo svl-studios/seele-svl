@@ -8,9 +8,9 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		public function download_plugin(){
-			$token    = sanitize_text_field( wp_unslash( $_POST['token'] ?? '' ) );
-			$package  = sanitize_text_field( wp_unslash( $_POST['package'] ?? '' ) );
-			$site_url = sanitize_text_field( wp_unslash( $_POST['site_url'] ?? '' ) );
+			$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
+			$package  = sanitize_text_field( wp_unslash( $_GET['package'] ?? '' ) );
+			$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
 			if ( 'revslider' === $package ) {
 				$url = 'https://www.svlatudios.com/extras/plugins/revslider.zip';
