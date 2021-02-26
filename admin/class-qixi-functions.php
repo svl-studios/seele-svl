@@ -17,7 +17,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			} elseif ( 'js_composer' === $package ) {
 				$url = 'https://www.svlatudios.com/extras/plugins/visual-composer.zip';
 			}
-
+echo 'whatever';
 			echo esc_url( $url );
 			die();
 		}
