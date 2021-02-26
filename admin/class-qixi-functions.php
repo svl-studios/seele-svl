@@ -5,6 +5,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		public function __construct() {
 			add_action( 'wp_ajax_qixi_get_download', array( $this, 'download_plugin' ) );
 			add_action( 'wp_ajax_nopriv_qixi_get_download', array( $this, 'download_plugin' ) );
+			echo 'whatever 1';
 		}
 
 		public function download_plugin(){
