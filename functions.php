@@ -38,8 +38,6 @@ function svl_setup() {
 
 add_action( 'after_setup_theme', 'svl_setup', 9 );
 
-require_once get_stylesheet_directory() . '/admin/vote/shortcode.php';
-
 /**
  * Run SVL Votes AJAX
  */
