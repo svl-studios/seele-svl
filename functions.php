@@ -25,33 +25,6 @@ function req_childtheme_style() {
 		$child_ver,
 		'all'
 	);
-
-	wp_enqueue_script(
-		'redux-blockUI',
-		get_stylesheet_directory_uri() . '/admin/vote/vendor/jquery.blockUI.js',
-		array( 'jquery' ),
-		$child_ver,
-		true
-	);
-
-	wp_enqueue_script(
-		'req-summerville-votes-button',
-		get_stylesheet_directory_uri() . '/admin/vote/button.js',
-		array( 'jquery' ),
-		$child_ver,
-		true
-	);
-
-	wp_localize_script(
-		'req-summerville-votes-button',
-		'svl_votes',
-		array(
-			'ajaxurl' => admin_url( 'admin-ajax.php' ),
-			'nonce'   => wp_create_nonce( 'svl_votes_ajax' ),
-			'event'   => $svl_options['svl_event'],
-			'color'   => $svl_options['svl_event_typo']['color'],
-		)
-	);
 }
 
 add_action( 'wp_enqueue_scripts', 'req_childtheme_style' );
@@ -60,7 +33,7 @@ add_action( 'wp_enqueue_scripts', 'req_childtheme_style' );
  * Load child theme specific functions
  */
 function svl_setup() {
-	require_once get_stylesheet_directory() . '/admin/vote/config.php';
+	require_once get_stylesheet_directory() . '/admin/class-qixi-functions.php';
 }
 
 add_action( 'after_setup_theme', 'svl_setup', 9 );
