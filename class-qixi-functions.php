@@ -13,11 +13,11 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
 			if ( 'revslider' === $package ) {
-				$url = 'https://www.svlatudios.com/extras/plugins/revslider.zip';
+				$url = 'https://www.svlstudios.com/extras/plugins/revslider.zip';
 			} elseif ( 'js_composer' === $package ) {
-				$url = 'https://www.svlatudios.com/extras/plugins/visual-composer.zip';
+				$url = 'https://www.svlstudios.com/extras/plugins/visual-composer.zip';
 			}
-echo 'whatever';
+
 			echo esc_url( $url );
 			die();
 		}
