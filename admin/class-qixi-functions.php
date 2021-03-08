@@ -45,7 +45,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					$result = 'error';
 
 					if ( 400 === (int) $validate['error'] ) {
-						$message = 'License already regiestered.';
+						$message = 'License already registered.';
 					} elseif ( 200 !== (int) $validate['error'] ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $validate['error'];
 					}
