@@ -20,7 +20,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		private function envato_sale_lookup( $code ) {
-			$envato_token = 'nKPrwZrOylLLPS3GkCVMi42fLdrwSW4E';
+			$envato_token = 'REa9PE3LSFCOo6NbtP4CtXd5k172tanc';
 			$user_agent   = 'SVL Studios: Qixi Theme';
 
 			$code = trim( $code );
@@ -39,26 +39,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			$response = wp_remote_get( 'https://api.envato.com/v3/market/author/sale?code=' . $code, $args );
 
 			if ( ! is_wp_error( $response ) && is_array( $response ) && ! empty( $response['body'] ) ) {
-				$validate = (array) json_decode( $response['body'], true );
-
-				if ( isset( $validate['error'] ) ) {
-					$result = 'error';
-
-					if ( 400 === (int) $validate['error'] ) {
-						$message = 'License already registered.';
-					} elseif ( 200 !== (int) $validate['error'] ) {
-						$message = 'Failed to validate code due to an error: HTTP ' . $validate['error'];
-					}
-				} else {
-					$message = '';
-					$result  = 'success';
-				}
-
-				return array(
-					'result'  => $result,
-					'message' => $message,
-					'token'   => $code,
-				);
+				return (array) json_decode( $response['body'], true );
 			}
 		}
 
@@ -77,9 +58,29 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
-				$result = $this->envato_sale_lookup( $key );
+				$api_result = $this->envato_sale_lookup( $key );
 
-				echo wp_json_encode( $result );
+				if ( isset( $api_result['error'] ) ) {
+					$result = 'error';
+
+					if ( 400 === (int) $api_result['error'] ) {
+						$message = 'License already registered.';
+					} elseif ( 200 !== (int) $api_result['error'] ) {
+						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
+					}
+				} else {
+					$message = '';
+					$result  = 'success';
+				}
+
+				return array(
+					'result'  => $result,
+					'message' => $message,
+				);
+
+				print_r($api_result);
+
+				//	echo wp_json_encode( $result );
 				die();
 			}
 		}
