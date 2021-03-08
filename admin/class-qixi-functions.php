@@ -19,6 +19,49 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			add_action( 'wp_ajax_nopriv_qixi_create_nonce', array( $this, 'nonce' ) );
 		}
 
+		private function envato_sale_lookup( $code ) {
+			$envato_token = 'JuQKoEAlSMhsuMA3V09xlvL5pInS7BrG';
+			$user_agent   = 'SVL Studios: Qixi Theme';
+
+			$code = trim( $code );
+			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
+				throw new Exception( 'Invalid code' );
+			}
+
+			$args = array(
+				'timeout'    => 20,
+				'user-agent' => $user_agent,
+				'headers'    => array(
+					'Authorization: Bearer ' . $envato_token,
+				),
+			);
+
+			$response = wp_remote_get( 'https://api.envato.com/v3/market/author/sale?code=' . $code, $args );
+
+			if ( ! is_wp_error( $response ) && is_array( $response ) && ! empty( $response['body'] ) ) {
+				$validate = (array) json_decode( $response['body'], true );
+
+				if ( isset( $validate['error'] ) ) {
+					$result = 'error';
+
+					if ( 400 === (int) $validate['error'] ) {
+						$message = 'License already regiestered.';
+					} elseif ( 200 !== (int) $validate['error'] ) {
+						$message = 'Failed to validate code due to an error: HTTP ' . $validate['error'];
+					}
+				} else {
+					$message = '';
+					$result  = 'success';
+				}
+
+				return array(
+					'result'  => $result,
+					'message' => $message,
+					'token'   => $code,
+				);
+			}
+		}
+
 		public function nonce() {
 			if ( isset( $_GET['nonce'] ) ) {
 				$key = sanitize_text_field( wp_unslash( $_GET['nonce'] ?? '' ) );
@@ -29,10 +72,16 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		public function activate() {
-			$key      = sanitize_text_field( wp_unslash( $_GET['key'] ?? '' ) );
-			$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
-			$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
+				$key      = sanitize_text_field( wp_unslash( $_GET['key'] ?? '' ) );
+				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
+				$result = envato_sale_lookup( $code );
+
+				echo wp_json_encode( $result );
+				die();
+			}
 		}
 
 		public function deactivate() {
