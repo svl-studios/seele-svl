@@ -76,7 +76,15 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				}
 
 				$purchase_count = $api_result['purchase_count'];
-update_option('svl_users', array('site_url' => '127.0.0.1/qixi') );
+
+				$x = array(
+					'SVLStudios' => array(
+						$api_result['item']['id'] => $api_result['purchase_count'],
+						'site_url'                => $site_url,
+					),
+				);
+
+update_option('svl_users', $x );
 print_r(get_option( 'svl_users' ) );
 die;
 				if ( $product === $api_result['item']['id'] && $purchase_count > 0 ) {
