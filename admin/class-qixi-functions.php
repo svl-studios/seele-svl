@@ -73,7 +73,12 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					$result  = 'success';
 				}
 
-print_r($api_result);
+				// Buyer
+				// Purchase Count
+				// Item[id]
+				echo $api_result['buyer'];
+				echo $api_result['purchase_count'];
+				echo $api_result['item']['id'];
 
 				$res = array(
 					'result'  => $result,
