@@ -64,7 +64,8 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				$api_result = $this->envato_sale_lookup( $key );
 
 				if ( isset( $api_result['error'] ) ) {
-					$result = 'error';
+					$result     = 'error';
+					$registered = false;
 
 					if ( 400 === (int) $api_result['error'] ) {
 						$message = 'License already registered.';
@@ -74,54 +75,54 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
 				} else {
-					$message = '';
-					$result  = 'success';
-				}
 
-				// Make sure the product ID is Qixi.
-				if ( (int) $product === $api_result['item']['id'] ) {
+					// Make sure the product ID is Qixi.
+					if ( (int) $product === $api_result['item']['id'] ) {
 
-					// Get buyer.
-					$buyer = strtolower( $api_result['buyer'] );
+						// Get buyer.
+						$buyer = strtolower( $api_result['buyer'] );
 
-					// User array.
-					$svl_users = get_option( 'svl_users' );
+						// User array.
+						$svl_users = get_option( 'svl_users' );
 
-					$purchase_count = $api_result['purchase_count'];
+						$purchase_count = $api_result['purchase_count'];
 
-					// Ensure buyer exists in our database.
-					if ( array_key_exists( $buyer, $svl_users ) ) {
-						$db_products = $svl_users[ $buyer ] ?? '';
+						// Ensure buyer exists in our database.
+						if ( array_key_exists( $buyer, $svl_users ) ) {
+							$db_products = $svl_users[ $buyer ] ?? '';
 
-						// Does item ID exist.
-						if ( array_key_exists( $product, $db_products ) ) {
-							$db_site_urls = $svl_users[ $buyer ][ $product ] ?? '';
+							// Does item ID exist.
+							if ( array_key_exists( $product, $db_products ) ) {
+								$db_site_urls = $svl_users[ $buyer ][ $product ] ?? '';
 
-							if ( array_key_exists( $site_url, $db_site_urls ) ) {
-								$db_code = $svl_users[ $buyer ][ $product ][ $site_url ] ?? '';
+								if ( array_key_exists( $site_url, $db_site_urls ) ) {
+									$db_code = $svl_users[ $buyer ][ $product ][ $site_url ] ?? '';
 
-								// site exists in database, is registered.  Is there a valid code?
-								if ( '' !== $db_code && $db_code === $key ) {
+									// site exists in database, is registered.  Is there a valid code?
+									if ( '' !== $db_code && $db_code === $key ) {
 
-									// Code exists and is valid.
-									$registered = true;
+										// Code exists and is valid.
+										$registered = true;
+									} else {
+
+										// Code does not exist or is invalid.
+										$registered = false;
+										$message    = 'Invalid code.';
+									}
 								} else {
+									$lic_count = count( $svl_users[ $buyer ][ $product ] );
 
-									// Code does not exist or is invalid.
-									$registered = false;
-								}
-							} else {
-								$lic_count = count( $svl_users[ $buyer ][ $product ] );
+									if ( $purchase_count > $lic_count ) {
 
-								if ( $purchase_count > $lic_count ) {
+										// Registered site does not exist.  If purchase count is greater than licenses in database,
+										// then user can register another licence.
+										$registered = true;
+									} elseif ( $purchase_count <= $lic_count ) {
 
-									// Registered site does not exist.  If purchase count is greater than licenses in database,
-									// then user can register another licence.
-									$registered = true;
-								} elseif ( $purchase_count <= $lic_count ) {
-
-									// If purchase count equals or less than license in database, then reject register aattempt.
-									$registered = false;
+										// If purchase count equals or less than license in database, then reject register aattempt.
+										$registered = false;
+										$message    = 'Invalid code.';
+									}
 								}
 							}
 						}
@@ -140,14 +141,14 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					);
 
 					update_option( 'svl_users', $x );
-					print_r( get_option( 'svl_users' ) );
+
+					$message = '';
+					$code    = $key;
+					$result  = 'success';
+				} else {
+					$code   = '';
+					$result = 'error';
 				}
-
-				die;
-
-				echo $api_result['buyer'];
-				echo $api_result['purchase_count'];
-				echo $api_result['item']['id'];
 
 				$res = array(
 					'result'  => $result,
