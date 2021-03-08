@@ -163,8 +163,43 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 
 		public function deactivate() {
 			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
-				$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
-				$site_url = sanitize_text_field( wp_unslash( $_GET['$site_url'] ?? '' ) );
+				$key      = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
+
+				$api_result = $this->envato_sale_lookup( $key );
+
+				if ( isset( $api_result['error'] ) ) {
+					$result     = 'error';
+					$registered = false;
+
+					if ( 400 === (int) $api_result['error'] ) {
+						$message = 'License already registered.';
+					} elseif ( 0 === $api_result['error'] ) {
+						$message = 'Invalid code.';
+					} elseif ( 200 !== (int) $api_result['error'] ) {
+						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
+					}
+				} else {
+					// Get buyer.
+					$buyer = strtolower( $api_result['buyer'] );
+
+					// User array.
+					$svl_users = get_option( 'svl_users' );
+
+					if ( array_key_exists( $buyer, $svl_users ) ) {
+						$db_products = $svl_users[ $buyer ] ?? '';
+
+						// Does item ID exist.
+						if ( array_key_exists( $product, $db_products ) ) {
+							$db_site_urls = $svl_users[ $buyer ][ $product ] ?? '';
+
+							foreach( $db_site_urls as $site => $code ){
+								echo $site;
+							}
+						}
+					}
+				}
 
 				$array = array(
 					'result' => 'success',
