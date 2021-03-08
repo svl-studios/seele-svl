@@ -26,22 +26,24 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			$user_agent   = 'SVL Studios: Qixi Theme';
 
 			$code = trim( $code );
-			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
-				throw new Exception( 'Invalid code' );
-			}
+			if ( preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
+				$args = array(
+					'timeout' => 20,
+					'headers' => array(
+						'Authorization' => 'Bearer ' . $envato_token,
+						'User-Agent'    => $user_agent,
+					),
+				);
 
-			$args = array(
-				'timeout' => 20,
-				'headers' => array(
-					'Authorization' => 'Bearer ' . $envato_token,
-					'User-Agent'    => $user_agent,
-				),
-			);
+				$response = wp_remote_get( 'https://api.envato.com/v3/market/author/sale?code=' . $code, $args );
 
-			$response = wp_remote_get( 'https://api.envato.com/v3/market/author/sale?code=' . $code, $args );
-
-			if ( ! is_wp_error( $response ) && is_array( $response ) && ! empty( $response['body'] ) ) {
-				return (array) json_decode( $response['body'], true );
+				if ( ! is_wp_error( $response ) && is_array( $response ) && ! empty( $response['body'] ) ) {
+					return (array) json_decode( $response['body'], true );
+				}
+			} else {
+				return array(
+					'error' => 0,
+				);
 			}
 		}
 
@@ -67,6 +69,8 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 					if ( 400 === (int) $api_result['error'] ) {
 						$message = 'License already registered.';
+					} elseif ( 0 === $api_result['error'] ) {
+						$message = 'Invalid code.';
 					} elseif ( 200 !== (int) $api_result['error'] ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
@@ -75,22 +79,27 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					$result  = 'success';
 				}
 
+				// Make sure the product ID is Qixi.
+				if ( $product === $api_result['item']['id'] ) {
+
+					// Get buyer.
+					$buyer = $api_result['buyer'];
+				}
+
+
 				$purchase_count = $api_result['purchase_count'];
 
 				$x = array(
 					'SVLStudios' => array(
 						$product => array(
-							$site_url => $key
+							$site_url => $key,
 						),
 					),
 				);
 
-update_option('svl_users', $x );
-print_r(get_option( 'svl_users' ) );
-die;
-				if ( $product === $api_result['item']['id'] && $purchase_count > 0 ) {
-
-				}
+				update_option( 'svl_users', $x );
+				print_r( get_option( 'svl_users' ) );
+				die;
 
 				echo $api_result['buyer'];
 				echo $api_result['purchase_count'];
@@ -128,7 +137,7 @@ die;
 
 		}
 
-		public function download_plugin(){
+		public function download_plugin() {
 			$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
 			$package  = sanitize_text_field( wp_unslash( $_GET['package'] ?? '' ) );
 			$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
