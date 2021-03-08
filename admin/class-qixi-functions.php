@@ -22,9 +22,9 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		private function envato_sale_lookup( $code ) {
 			$envato_token = 'JuQKoEAlSMhsuMA3V09xlvL5pInS7BrG';
 			$user_agent   = 'SVL Studios: Qixi Theme';
-
+echo $code;
 			$code = trim( $code );
-			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){4}([a-f0-9]{12})$/i', $code ) ) {
+			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
 				throw new Exception( 'Invalid code' );
 			}
 
