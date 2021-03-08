@@ -17,6 +17,8 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 			add_action( 'wp_ajax_qixi_create_nonce', array( $this, 'nonce' ) );
 			add_action( 'wp_ajax_nopriv_qixi_create_nonce', array( $this, 'nonce' ) );
+
+			update_option( 'svl_users', array( 'SVLStudios' ) );
 		}
 
 		private function envato_sale_lookup( $code ) {
@@ -73,9 +75,14 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					$result  = 'success';
 				}
 
-				// Buyer
-				// Purchase Count
-				// Item[id]
+				$purchase_count = $api_result['purchase_count'];
+
+print_r(get_option( 'svl_users' ) );
+die;
+				if ( $product === $api_result['item']['id'] && $purchase_count > 0 ) {
+
+				}
+
 				echo $api_result['buyer'];
 				echo $api_result['purchase_count'];
 				echo $api_result['item']['id'];
