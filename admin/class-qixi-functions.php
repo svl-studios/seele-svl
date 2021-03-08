@@ -45,6 +45,8 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				);
 
 				echo wp_json_encode( $array );
+
+				die();
 			}
 		}
 
