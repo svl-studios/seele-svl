@@ -21,8 +21,8 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 		public function nonce() {
 			echo 'balls';
-			if ( isset( $_GET['action'] ) ) {
-				$key = sanitize_text_field( wp_unslash( $_GET['action'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) ) {
+				$key = sanitize_text_field( wp_unslash( $_GET['nonce'] ?? '' ) );
 
 				echo sanitize_key( wp_unslash( wp_create_nonce( $key ) ) );
 				die();
