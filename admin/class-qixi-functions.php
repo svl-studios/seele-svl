@@ -29,10 +29,10 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			}
 
 			$args = array(
-				'timeout'    => 20,
-				'user-agent' => $user_agent,
-				'headers'    => array(
-					'Authorization: Bearer ' . $envato_token,
+				'timeout' => 20,
+				'headers' => array(
+					'Authorization' => 'Bearer ' . $envato_token,
+					'User-Agent'    => $user_agent,
 				),
 			);
 
