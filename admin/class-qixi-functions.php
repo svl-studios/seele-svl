@@ -36,9 +36,16 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		public function deactivate() {
-			$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
-			$site_url = sanitize_text_field( wp_unslash( $_GET['$site_url'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ) ) ) {
+				$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['$site_url'] ?? '' ) );
 
+				$array = array(
+					'result' => 'success',
+				);
+
+				echo wp_json_encode( $array );
+			}
 		}
 
 		public function validate() {
