@@ -1,27 +1,27 @@
 <?php
 
-if ( ! class_exists( 'Qixi_Functions' ) ) {
-	class Qixi_Functions {
+if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
+	class SVL_Envato_Functions {
 		public function __construct() {
-			add_action( 'wp_ajax_qixi_get_download', array( $this, 'download_plugin' ) );
-			add_action( 'wp_ajax_nopriv_qixi_get_download', array( $this, 'download_plugin' ) );
+			add_action( 'wp_ajax_svl_get_download', array( $this, 'download_plugin' ) );
+			add_action( 'wp_ajax_nopriv_svl_get_download', array( $this, 'download_plugin' ) );
 
-			add_action( 'wp_ajax_qixi_deactivate_license', array( $this, 'deactivate' ) );
-			add_action( 'wp_ajax_nopriv_qixi_deactivate_license', array( $this, 'deactivate' ) );
+			add_action( 'wp_ajax_svl_deactivate_license', array( $this, 'deactivate' ) );
+			add_action( 'wp_ajax_nopriv_svl_deactivate_license', array( $this, 'deactivate' ) );
 
-			add_action( 'wp_ajax_qixi_activate_license', array( $this, 'activate' ) );
-			add_action( 'wp_ajax_nopriv_qixi_activate_license', array( $this, 'activate' ) );
+			add_action( 'wp_ajax_svl_activate_license', array( $this, 'activate' ) );
+			add_action( 'wp_ajax_nopriv_svl_activate_license', array( $this, 'activate' ) );
 
-			add_action( 'wp_ajax_qixi_validate_token', array( $this, 'validate' ) );
-			add_action( 'wp_ajax_nopriv_qixi_validate_token', array( $this, 'validate' ) );
+			add_action( 'wp_ajax_svl_validate_token', array( $this, 'validate' ) );
+			add_action( 'wp_ajax_nopriv_svl_validate_token', array( $this, 'validate' ) );
 
-			add_action( 'wp_ajax_qixi_create_nonce', array( $this, 'nonce' ) );
-			add_action( 'wp_ajax_nopriv_qixi_create_nonce', array( $this, 'nonce' ) );
+			add_action( 'wp_ajax_svl_create_nonce', array( $this, 'nonce' ) );
+			add_action( 'wp_ajax_nopriv_svl_create_nonce', array( $this, 'nonce' ) );
 		}
 
 		private function envato_sale_lookup( $code ) {
 			$envato_token = 'REa9PE3LSFCOo6NbtP4CtXd5k172tanc';
-			$user_agent   = 'SVL Studios: Qixi Theme';
+			$user_agent   = 'SVL Studios: ' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
 
 			$code = trim( $code );
 			if ( preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
@@ -198,5 +198,5 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 	}
 
-	new Qixi_Functions();
+	new SVL_Envato_Functions();
 }

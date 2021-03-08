@@ -33,7 +33,7 @@ add_action( 'wp_enqueue_scripts', 'req_childtheme_style' );
  * Load child theme specific functions
  */
 function svl_setup() {
-	require_once get_stylesheet_directory() . '/admin/class-qixi-functions.php';
+	require_once get_stylesheet_directory() . '/admin/class-svl-envato-functions.php';
 }
 
 add_action( 'after_setup_theme', 'svl_setup', 9 );
