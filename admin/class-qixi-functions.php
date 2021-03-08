@@ -20,7 +20,6 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		public function nonce() {
-			echo 'balls';
 			if ( isset( $_GET['nonce'] ) ) {
 				$key = sanitize_text_field( wp_unslash( $_GET['nonce'] ?? '' ) );
 
