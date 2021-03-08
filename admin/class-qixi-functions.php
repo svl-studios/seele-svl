@@ -20,7 +20,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		private function envato_sale_lookup( $code ) {
-			$envato_token = 'JuQKoEAlSMhsuMA3V09xlvL5pInS7BrG';
+			$envato_token = 'nKPrwZrOylLLPS3GkCVMi42fLdrwSW4E';
 			$user_agent   = 'SVL Studios: Qixi Theme';
 
 			$code = trim( $code );
