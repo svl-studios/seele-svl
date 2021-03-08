@@ -77,7 +77,7 @@ echo $code;
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
-				$result = $this->envato_sale_lookup( $code );
+				$result = $this->envato_sale_lookup( $key );
 
 				echo wp_json_encode( $result );
 				die();
