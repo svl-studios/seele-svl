@@ -36,7 +36,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 		}
 
 		public function deactivate() {
-			if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ) ) ) {
+			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
 				$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['$site_url'] ?? '' ) );
 
