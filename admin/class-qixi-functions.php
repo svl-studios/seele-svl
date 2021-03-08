@@ -17,8 +17,6 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 			add_action( 'wp_ajax_qixi_create_nonce', array( $this, 'nonce' ) );
 			add_action( 'wp_ajax_nopriv_qixi_create_nonce', array( $this, 'nonce' ) );
-
-			update_option( 'svl_users', array( 'SVLStudios' ) );
 		}
 
 		private function envato_sale_lookup( $code ) {
@@ -84,7 +82,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				if ( (int) $product === $api_result['item']['id'] ) {
 
 					// Get buyer.
-					$buyer = $api_result['buyer'];
+					$buyer = strtolower( $api_result['buyer'] );
 
 					// User array.
 					$svl_users = get_option( 'svl_users' );
@@ -93,17 +91,27 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 					// Ensure buyer exists in our database.
 					if ( array_key_exists( $buyer, $svl_users ) ) {
-						print_r( $svl_users[ $buyer ] );
+						$db_products = $svl_users[ $buyer ] ?? '';
 
 						// Does item ID exist.
-						if ( array_key_exists( $product, $svl_users[ $buyer ] ) ) {
-							$lic_count = count( $svl_users[ $buyer ][ $product ] );
+						if ( array_key_exists( $product, $db_products ) ) {
+							$db_site_urls = $svl_users[ $buyer ][ $product ] ?? '';
 
-							if ( array_key_exists( $svl_users[ $buyer ][ $product ], $site_url ) ) {
+							if ( array_key_exists( $site_url, $db_site_urls ) ) {
+								$db_code = $svl_users[ $buyer ][ $product ][ $site_url ] ?? '';
 
-								// site exists in database, is registered.
-								$registered = true;
+								// site exists in database, is registered.  Is there a valid code?
+								if ( '' !== $db_code && $db_code === $key ) {
+
+									// Code exists and is valid.
+									$registered = true;
+								} else {
+
+									// Code does not exist or is invalid.
+									$registered = false;
+								}
 							} else {
+								$lic_count = count( $svl_users[ $buyer ][ $product ] );
 
 								if ( $purchase_count > $lic_count ) {
 
@@ -116,41 +124,25 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 									$registered = false;
 								}
 							}
-
-							foreach ( $svl_users[ $buyer ][ $product ] as $site => $code ) {
-								if ( $site_url === $site ) {
-									if ( $key === $code) {
-										$registered = true;
-									} else {
-										$registered = false;
-									}
-								} else {
-
-								}
-
-								echo $site;
-								echo $code;
-							}
-
-							echo count( $svl_users[ $buyer ][ $product ] );
 						}
 					}
 				}
 
+				if ( $registered ) {
 
-
-
-				// Write entry to the user database.
-				$x = array(
-					$buyer => array(
-						$product => array(
-							$site_url => $key,
+					// Write entry to the user database.
+					$x = array(
+						strtolower( $buyer ) => array(
+							$product => array(
+								$site_url => $key,
+							),
 						),
-					),
-				);
+					);
 
-				update_option( 'svl_users', $x );
-				print_r( get_option( 'svl_users' ) );
+					update_option( 'svl_users', $x );
+					print_r( get_option( 'svl_users' ) );
+				}
+
 				die;
 
 				echo $api_result['buyer'];
