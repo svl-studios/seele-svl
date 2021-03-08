@@ -61,6 +61,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				$key      = sanitize_text_field( wp_unslash( $_GET['key'] ?? '' ) );
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
 
 				$api_result = $this->envato_sale_lookup( $key );
 
@@ -80,17 +81,68 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				}
 
 				// Make sure the product ID is Qixi.
-				if ( $product === $api_result['item']['id'] ) {
+				if ( (int) $product === $api_result['item']['id'] ) {
 
 					// Get buyer.
 					$buyer = $api_result['buyer'];
+
+					// User array.
+					$svl_users = get_option( 'svl_users' );
+
+					$purchase_count = $api_result['purchase_count'];
+
+					// Ensure buyer exists in our database.
+					if ( array_key_exists( $buyer, $svl_users ) ) {
+						print_r( $svl_users[ $buyer ] );
+
+						// Does item ID exist.
+						if ( array_key_exists( $product, $svl_users[ $buyer ] ) ) {
+							$lic_count = count( $svl_users[ $buyer ][ $product ] );
+
+							if ( array_key_exists( $svl_users[ $buyer ][ $product ], $site_url ) ) {
+
+								// site exists in database, is registered.
+								$registered = true;
+							} else {
+
+								if ( $purchase_count > $lic_count ) {
+
+									// Registered site does not exist.  If purchase count is greater than licenses in database,
+									// then user can register another licence.
+									$registered = true;
+								} elseif ( $purchase_count <= $lic_count ) {
+
+									// If purchase count equals or less than license in database, then reject register aattempt.
+									$registered = false;
+								}
+							}
+
+							foreach ( $svl_users[ $buyer ][ $product ] as $site => $code ) {
+								if ( $site_url === $site ) {
+									if ( $key === $code) {
+										$registered = true;
+									} else {
+										$registered = false;
+									}
+								} else {
+
+								}
+
+								echo $site;
+								echo $code;
+							}
+
+							echo count( $svl_users[ $buyer ][ $product ] );
+						}
+					}
 				}
 
 
-				$purchase_count = $api_result['purchase_count'];
 
+
+				// Write entry to the user database.
 				$x = array(
-					'SVLStudios' => array(
+					$buyer => array(
 						$product => array(
 							$site_url => $key,
 						),
