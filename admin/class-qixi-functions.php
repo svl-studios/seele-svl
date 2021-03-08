@@ -77,7 +77,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 
-				$result = envato_sale_lookup( $code );
+				$result = $this->envato_sale_lookup( $code );
 
 				echo wp_json_encode( $result );
 				die();
