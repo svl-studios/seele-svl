@@ -73,14 +73,14 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 					$result  = 'success';
 				}
 
-				return array(
+				$res = array(
 					'result'  => $result,
 					'message' => $message,
 				);
 
-				print_r($api_result);
 
-				//	echo wp_json_encode( $result );
+
+				echo wp_json_encode( $res );
 				die();
 			}
 		}
