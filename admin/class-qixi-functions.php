@@ -79,8 +79,9 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 
 				$x = array(
 					'SVLStudios' => array(
-						$api_result['item']['id'] => $api_result['purchase_count'],
-						'site_url'                => $site_url,
+						$product => array(
+							$site_url => $key
+						),
 					),
 				);
 
