@@ -24,7 +24,7 @@ if ( ! class_exists( 'Qixi_Functions' ) ) {
 			$user_agent   = 'SVL Studios: Qixi Theme';
 
 			$code = trim( $code );
-			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){3}([a-f0-9]{12})$/i', $code ) ) {
+			if ( ! preg_match( '/^([a-f0-9]{8})-(([a-f0-9]{4})-){4}([a-f0-9]{12})$/i', $code ) ) {
 				throw new Exception( 'Invalid code' );
 			}
 
