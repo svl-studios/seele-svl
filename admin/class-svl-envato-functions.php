@@ -148,6 +148,10 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 									}
 								}
 							}
+						} else {
+
+							// No DB entry.
+							$registered = true;
 						}
 					}
 				}
