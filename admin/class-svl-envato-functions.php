@@ -1,7 +1,17 @@
 <?php
 
 if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
+
+	/**
+	 * Class SVL_Envato_Functions
+	 */
 	class SVL_Envato_Functions {
+
+		/**
+		 * SVL_Envato_Functions constructor.
+		 *
+		 * @noinspection PhpDocIsNotCompleteInspection
+		 */
 		public function __construct() {
 			add_action( 'wp_ajax_svl_get_download', array( $this, 'download_plugin' ) );
 			add_action( 'wp_ajax_nopriv_svl_get_download', array( $this, 'download_plugin' ) );
@@ -19,7 +29,14 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 			add_action( 'wp_ajax_nopriv_svl_create_nonce', array( $this, 'nonce' ) );
 		}
 
-		private function envato_sale_lookup( $code ) {
+		/**
+		 * Lookup code validate at Envato.
+		 *
+		 * @param string $code Code.
+		 *
+		 * @return array|int[]
+		 */
+		private function envato_sale_lookup( string $code ): array {
 			$envato_token = 'REa9PE3LSFCOo6NbtP4CtXd5k172tanc';
 			$user_agent   = 'SVL Studios: ' . sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ?? '' ) );
 
@@ -45,15 +62,21 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 			}
 		}
 
+		/**
+		 * Return nonce the server will recognize.
+		 */
 		public function nonce() {
-			if ( isset( $_GET['nonce'] ) ) {
-				$key = sanitize_text_field( wp_unslash( $_GET['nonce'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) ) { // phpcs:ignore
+				$key = sanitize_text_field( wp_unslash( $_GET['nonce'] ?? '' ) ); // phpcs:ignore
 
 				echo sanitize_key( wp_unslash( wp_create_nonce( $key ) ) );
 				die();
 			}
 		}
 
+		/**
+		 * Activate license and save user to DB.
+		 */
 		public function activate() {
 			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
 				$key      = sanitize_text_field( wp_unslash( $_GET['key'] ?? '' ) );
@@ -67,11 +90,11 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 					$result     = 'error';
 					$registered = false;
 
-					if ( 400 === (int) $api_result['error'] ) {
+					if ( 400 === $api_result['error'] ) {
 						$message = 'License already registered.';
 					} elseif ( 0 === $api_result['error'] ) {
 						$message = 'Invalid code.';
-					} elseif ( 200 !== (int) $api_result['error'] ) {
+					} elseif ( 200 !== $api_result['error'] ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
 				} else {
@@ -161,6 +184,9 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 			}
 		}
 
+		/**
+		 * Deactivate license and remove registered site from DB.
+		 */
 		public function deactivate() {
 			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
 				$key      = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
@@ -172,18 +198,17 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 
 				$message = '';
 
-				if ( isset( $api_result['error'] ) ) {
-					$result = 'error';
+				$result = 'error';
 
-					if ( 400 === (int) $api_result['error'] ) {
+				if ( isset( $api_result['error'] ) ) {
+					if ( 400 === $api_result['error'] ) {
 						$message = 'License already registered.';
 					} elseif ( 0 === $api_result['error'] ) {
 						$message = 'Invalid code.';
-					} elseif ( 200 !== (int) $api_result['error'] ) {
+					} elseif ( 200 !== $api_result['error'] ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
 				} else {
-					$result = 'error';
 
 					// Get buyer.
 					$buyer = strtolower( $api_result['buyer'] );
@@ -221,16 +246,79 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 			}
 		}
 
+		/**
+		 * Validate license.
+		 */
 		public function validate() {
-			$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
-			$site_url = sanitize_text_field( wp_unslash( $_GET['$site_url'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
+				$key      = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
+				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
 
+				$api_result = $this->envato_sale_lookup( $key );
+
+				$message = '';
+
+				$result = 'error';
+
+				if ( isset( $api_result['error'] ) ) {
+					if ( 400 === $api_result['error'] ) {
+						$message = 'License already registered.';
+					} elseif ( 0 === $api_result['error'] ) {
+						$message = 'Invalid code.';
+					} elseif ( 200 !== $api_result['error'] ) {
+						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
+					}
+				} else {
+
+					// Get buyer.
+					$buyer = strtolower( $api_result['buyer'] );
+
+					// User array.
+					$svl_users = get_option( 'svl_users' );
+
+					if ( array_key_exists( $buyer, $svl_users ) ) {
+						$db_products = $svl_users[ $buyer ] ?? '';
+
+						// Does item ID exist.
+						if ( array_key_exists( $product, $db_products ) ) {
+							$db_site_urls = $svl_users[ $buyer ][ $product ] ?? '';
+
+							foreach ( $db_site_urls as $site => $code ) {
+
+								if ( $site === $site_url ) {
+									$result = 'success';
+								}
+							}
+						}
+					}
+				}
+
+				update_option( 'svl_users', $svl_users );
+
+				$array = array(
+					'result' => $result,
+				);
+
+				echo wp_json_encode( $array );
+
+				die();
+			}
 		}
 
+		/**
+		 * Download support plugins.
+		 */
 		public function download_plugin() {
-			$token    = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
-			$package  = sanitize_text_field( wp_unslash( $_GET['package'] ?? '' ) );
-			$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+			if ( isset( $_GET['nonce'] ) && isset( $_GET['action'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), sanitize_key( wp_unslash( $_GET['action'] ) ) ) ) {
+				$key      = sanitize_text_field( wp_unslash( $_GET['token'] ?? '' ) );
+				$package  = sanitize_text_field( wp_unslash( $_GET['package'] ?? '' ) );
+				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
+				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
+				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
+
+			}
 
 			if ( 'revslider' === $package ) {
 				$url = 'https://www.svlstudios.com/extras/plugins/revslider.zip';
