@@ -168,9 +168,10 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
 
+				$message = '';
+
 				if ( isset( $api_result['error'] ) ) {
-					$result     = 'error';
-					$registered = false;
+					$result = 'error';
 
 					if ( 400 === (int) $api_result['error'] ) {
 						$message = 'License already registered.';
@@ -180,6 +181,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
 				} else {
+					$result = 'error';
+
 					// Get buyer.
 					$buyer = strtolower( $api_result['buyer'] );
 
@@ -197,17 +200,15 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 
 								if ( $site === $site_url ) {
 									unset( $svl_users[ $buyer ][ $product ][ $site ] );
+									$result = 'success';
 								}
 							}
 						}
 					}
 				}
 
-				print_r($svl_users);
-				die();
-
 				$array = array(
-					'result' => 'success',
+					'result' => $result,
 				);
 
 				echo wp_json_encode( $array );
