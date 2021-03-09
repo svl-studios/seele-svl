@@ -168,6 +168,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
 
+				$api_result = $this->envato_sale_lookup( $key );
+
 				$message = '';
 
 				if ( isset( $api_result['error'] ) ) {
