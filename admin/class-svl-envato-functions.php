@@ -209,6 +209,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 					}
 				}
 
+				update_option( 'svl_users', $svl_users );
+
 				$array = array(
 					'result' => $result,
 				);
