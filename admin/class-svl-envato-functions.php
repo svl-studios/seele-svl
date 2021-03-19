@@ -269,7 +269,7 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 					if ( 400 === $api_result['error'] ) {
 						$message = 'License already registered.';
 					} elseif ( 0 === $api_result['error'] ) {
-						$message = 'Invalid code.';
+						$message = 'Token Not Valid';
 					} elseif ( 200 !== $api_result['error'] ) {
 						$message = 'Failed to validate code due to an error: HTTP ' . $api_result['error'];
 					}
