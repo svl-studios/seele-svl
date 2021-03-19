@@ -241,16 +241,19 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				if ( trim( $key ) === $this->private_code ) {
 					$freebee_list = get_option( 'qixi_free', array() );
 
-					$result = 'error';
+					$result  = 'error';
+					$message = 'Token Not Valid';
 					if ( in_array( $site_url, $freebee_list, true ) ) {
 						unset( $freebee_list[ $site_url ] );
 						update_option( 'qixi_free', $freebee_list );
 
-						$result = 'success';
+						$result  = 'success';
+						$message = '';
 					}
 
 					$array = array(
-						'result' => $result,
+						'result'  => $result,
+						'message' => $message,
 					);
 
 					echo wp_json_encode( $array );
