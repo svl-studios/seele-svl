@@ -8,6 +8,20 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 	class SVL_Envato_Functions {
 
 		/**
+		 * Private code for free registation.
+		 *
+		 * @var string
+		 */
+		private $private_code = "'eNTeR KeV'S BaCKDooR 4-8-15-16-23-42";
+
+		/**
+		 * Number of allowed private registrations.
+		 *
+		 * @var int
+		 */
+		private $allowed_freebees = 5;
+
+		/**
 		 * SVL_Envato_Functions constructor.
 		 *
 		 * @noinspection PhpDocIsNotCompleteInspection
@@ -83,6 +97,32 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
+
+				if ( trim( $key ) === $this->private_code ) {
+					$freebee_list = get_option( 'qixi_free', array() );
+
+					if ( count( $freebee_list ) >= $this->allowed_freebees ) {
+						$message = 'Invalid code.';
+						$result  = 'error';
+					} else {
+						$message = '';
+						$result  = 'success';
+
+						if ( ! in_array( $site_url, $freebee_list, true ) ) {
+							$freebee_list[] = $site_url;
+							update_option( 'qixi_free', $freebee_list );
+						}
+					}
+
+					$res = array(
+						'result'  => $result,
+						'message' => $message,
+						'token'   => $code,
+					);
+
+					echo wp_json_encode( $res );
+					die;
+				}
 
 				$api_result = $this->envato_sale_lookup( $key );
 
@@ -198,11 +238,29 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
 
+				if ( trim( $key ) === $this->private_code ) {
+					$freebee_list = get_option( 'qixi_free', array() );
+
+					$result = 'error';
+					if ( in_array( $site_url, $freebee_list, true ) ) {
+						unset( $freebee_list[ $site_url ] );
+						update_option( 'qixi_free', $freebee_list );
+
+						$result = 'success';
+					}
+
+					$array = array(
+						'result' => $result,
+					);
+
+					echo wp_json_encode( $array );
+					die();
+				}
+
 				$api_result = $this->envato_sale_lookup( $key );
 
-				$message = '';
-
-				$result = 'error';
+				$result  = 'error';
+				$message = 'Token Not Valid';
 
 				if ( isset( $api_result['error'] ) ) {
 					if ( 400 === $api_result['error'] ) {
@@ -231,7 +289,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 
 								if ( $site === $site_url ) {
 									unset( $svl_users[ $buyer ][ $product ][ $site ] );
-									$result = 'success';
+									$result  = 'success';
+									$message = '';
 								}
 							}
 						}
@@ -241,7 +300,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				update_option( 'svl_users', $svl_users );
 
 				$array = array(
-					'result' => $result,
+					'result'  => $result,
+					'message' => $message,
 				);
 
 				echo wp_json_encode( $array );
@@ -259,6 +319,22 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$product  = sanitize_text_field( wp_unslash( $_GET['product'] ?? '' ) );
 				$site_url = sanitize_text_field( wp_unslash( $_GET['site_url'] ?? '' ) );
 				$site_url = str_replace( array( 'http://', 'https://' ), '', $site_url );
+
+				if ( trim( $key ) === $this->private_code ) {
+					$result = 'error';
+
+					$freebe_users = get_option( 'qixi_free', array() );
+					if ( isset( $freebe_users[ $site_url ] ) ) {
+						$result = 'success';
+					}
+
+					$array = array(
+						'result' => $result,
+					);
+
+					echo wp_json_encode( $array );
+					die();
+				}
 
 				$api_result = $this->envato_sale_lookup( $key );
 
@@ -306,7 +382,6 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				);
 
 				echo wp_json_encode( $array );
-
 				die();
 			}
 		}
