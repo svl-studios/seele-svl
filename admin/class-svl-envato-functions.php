@@ -406,6 +406,8 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 				$url = 'https://www.svlstudios.com/extras/plugins/revslider.zip';
 			} elseif ( 'js_composer' === $package ) {
 				$url = 'https://www.svlstudios.com/extras/plugins/visual-composer.zip';
+			} elseif ( 'Ultimate_VC_Addons' === $package ) {
+				$url = 'https://www.svlstudios.com/extras/plugins/ultimate_vc_addons.zip';
 			}
 
 			echo esc_url( $url );
