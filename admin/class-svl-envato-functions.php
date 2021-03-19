@@ -12,7 +12,7 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 		 *
 		 * @var string
 		 */
-		private $private_code = "'eNTeR KeV'S BaCKDooR 4-8-15-16-23-42";
+		private $private_code = "eNTeR KeV'S BaCKDooR 4-8-15-16-23-42";
 
 		/**
 		 * Number of allowed private registrations.
