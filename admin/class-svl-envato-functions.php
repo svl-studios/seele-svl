@@ -117,7 +117,7 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 					$res = array(
 						'result'  => $result,
 						'message' => $message,
-						'token'   => $code,
+						'token'   => $key,
 					);
 
 					echo wp_json_encode( $res );
