@@ -327,7 +327,7 @@ if ( ! class_exists( 'SVL_Envato_Functions' ) ) {
 					$result = 'error';
 
 					$freebe_users = get_option( 'qixi_free', array() );
-					if ( isset( $freebe_users[ $site_url ] ) ) {
+					if ( in_array( $site_url, $freebe_users, true ) ) {
 						$result = 'success';
 					}
 
